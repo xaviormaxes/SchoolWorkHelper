@@ -30,20 +30,28 @@ Double-click `run.bat`
 
 ## Using the App
 
-1. Click "Start Recording"
-2. Speak your answer (up to 30 seconds)
-3. Click "Stop Recording" or wait for it to finish
-4. Review the improved text
-5. Click "Copy Improved Text"
-6. Paste into your schoolwork (Ctrl+V or Cmd+V)
+1. **Select your subject** from the dropdown:
+   - General (60 sec) - Quick answers
+   - Math (90 sec) - Math problems
+   - Science (2 min) - Science explanations
+   - History (2.5 min) - Historical writing
+   - Essay (3 min) - Long-form essays
+
+2. Click "Start Recording"
+3. Speak your answer (time limit shown next to subject)
+4. Click "Stop Recording" or wait for it to finish
+5. Review the improved text with subject-specific formatting
+6. Click "Copy Improved Text"
+7. Paste into your schoolwork (Ctrl+V or Cmd+V)
 
 ## Tips
 
+- **Choose the right subject** for best results
 - Speak naturally and clearly
 - Use complete sentences when possible
+- For essays, you have up to 3 minutes!
 - Position the window so it doesn't block your work
 - The window stays on top - you can move it anywhere
-- Break long answers into multiple recordings
 
 ## Troubleshooting
 

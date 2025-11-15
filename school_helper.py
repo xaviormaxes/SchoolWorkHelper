@@ -21,7 +21,7 @@ class SchoolWorkHelper:
     def __init__(self, root):
         self.root = root
         self.root.title("School Work Helper")
-        self.root.geometry("450x600")
+        self.root.geometry("500x700")
 
         # Make window always on top
         self.root.attributes('-topmost', True)
@@ -38,6 +38,83 @@ class SchoolWorkHelper:
         self.use_ai = bool(api_key)
         if self.use_ai:
             self.client = OpenAI(api_key=api_key)
+
+        # Subject-specific settings
+        self.subject_prompts = {
+            "General": {
+                "prompt": """You are a helpful writing assistant for students. Your job is to take what a student says out loud and rewrite it in a clear, well-structured way that's appropriate for school assignments.
+
+Important rules:
+- Keep the student's original meaning and ideas
+- Make the language more formal and clear
+- Fix grammar and sentence structure
+- Don't add new information or answer questions for them
+- Keep it at an appropriate level for a student
+- Make it concise and easy to understand""",
+                "max_tokens": 600,
+                "time_limit": 60
+            },
+            "Essay": {
+                "prompt": """You are a helpful writing assistant for students working on essays. Your job is to take what a student says out loud and rewrite it in a clear, well-structured essay format.
+
+Important rules:
+- Keep the student's original meaning and ideas
+- Organize thoughts into clear paragraphs
+- Use proper essay structure and transitions
+- Make the language more formal and academic
+- Fix grammar and sentence structure
+- Don't add new information or answer questions for them
+- Maintain the student's voice and perspective
+- Create proper paragraph breaks for different ideas""",
+                "max_tokens": 1500,
+                "time_limit": 180
+            },
+            "Math": {
+                "prompt": """You are a helpful writing assistant for students working on math problems. Your job is to take what a student says out loud and rewrite it in a clear, well-structured mathematical explanation.
+
+Important rules:
+- Keep the student's original reasoning and approach
+- Organize steps clearly and logically
+- Use proper mathematical terminology
+- Format equations and expressions clearly
+- Show step-by-step reasoning
+- Don't solve problems for them or add new steps
+- Make their explanation more precise and clear
+- Use phrases like "First,", "Then,", "Therefore," to show progression""",
+                "max_tokens": 800,
+                "time_limit": 90
+            },
+            "History": {
+                "prompt": """You are a helpful writing assistant for students working on history assignments. Your job is to take what a student says out loud and rewrite it in a clear, well-structured historical narrative or analysis.
+
+Important rules:
+- Keep the student's original facts and interpretation
+- Organize information chronologically or thematically as appropriate
+- Use proper historical terminology
+- Make cause-and-effect relationships clear
+- Fix grammar and sentence structure
+- Don't add new historical facts or dates
+- Maintain the student's perspective and analysis
+- Use formal academic language appropriate for history""",
+                "max_tokens": 1200,
+                "time_limit": 150
+            },
+            "Science": {
+                "prompt": """You are a helpful writing assistant for students working on science assignments. Your job is to take what a student says out loud and rewrite it in a clear, well-structured scientific explanation.
+
+Important rules:
+- Keep the student's original observations and reasoning
+- Organize information logically (hypothesis, procedure, observations, conclusions)
+- Use proper scientific terminology
+- Make cause-and-effect relationships clear
+- Fix grammar and sentence structure
+- Don't add new scientific facts or data
+- Maintain objectivity and scientific tone
+- Format any procedures or steps clearly""",
+                "max_tokens": 1000,
+                "time_limit": 120
+            }
+        }
 
         # Setup UI
         self.setup_ui()
@@ -67,11 +144,42 @@ class SchoolWorkHelper:
         # Instructions
         instructions = ttk.Label(
             main_frame,
-            text="Click 'Start Recording' and speak your answer.\nThe app will help rewrite it clearly!",
+            text="Select subject, click 'Start Recording' and speak your answer.\nThe app will help rewrite it clearly!",
             justify=tk.CENTER,
-            wraplength=400
+            wraplength=450
         )
         instructions.grid(row=1, column=0, pady=(0, 10))
+
+        # Subject selection frame
+        subject_frame = ttk.Frame(main_frame)
+        subject_frame.grid(row=2, column=0, pady=(0, 10))
+
+        subject_label = ttk.Label(
+            subject_frame,
+            text="Subject:",
+            font=("Arial", 10, "bold")
+        )
+        subject_label.grid(row=0, column=0, padx=(0, 10))
+
+        self.subject_var = tk.StringVar(value="General")
+        self.subject_dropdown = ttk.Combobox(
+            subject_frame,
+            textvariable=self.subject_var,
+            values=list(self.subject_prompts.keys()),
+            state="readonly",
+            width=15
+        )
+        self.subject_dropdown.grid(row=0, column=1)
+        self.subject_dropdown.bind("<<ComboboxSelected>>", self.on_subject_change)
+
+        # Time limit display
+        self.time_label = ttk.Label(
+            subject_frame,
+            text="(60 sec max)",
+            font=("Arial", 9),
+            foreground="gray"
+        )
+        self.time_label.grid(row=0, column=2, padx=(10, 0))
 
         # Status indicator
         self.status_label = ttk.Label(
@@ -80,11 +188,11 @@ class SchoolWorkHelper:
             font=("Arial", 10),
             foreground="green"
         )
-        self.status_label.grid(row=2, column=0, pady=(0, 10))
+        self.status_label.grid(row=3, column=0, pady=(0, 10))
 
         # Control buttons frame
         button_frame = ttk.Frame(main_frame)
-        button_frame.grid(row=3, column=0, pady=(0, 10))
+        button_frame.grid(row=4, column=0, pady=(0, 10))
 
         # Record button
         self.record_button = ttk.Button(
@@ -110,7 +218,7 @@ class SchoolWorkHelper:
             text="What you said:",
             font=("Arial", 11, "bold")
         )
-        original_label.grid(row=4, column=0, sticky=tk.W, pady=(10, 5))
+        original_label.grid(row=5, column=0, sticky=tk.W, pady=(10, 5))
 
         self.original_text = scrolledtext.ScrolledText(
             main_frame,
@@ -119,7 +227,7 @@ class SchoolWorkHelper:
             font=("Arial", 10),
             bg="#f0f0f0"
         )
-        self.original_text.grid(row=5, column=0, sticky=(tk.W, tk.E), pady=(0, 10))
+        self.original_text.grid(row=6, column=0, sticky=(tk.W, tk.E), pady=(0, 10))
 
         # Improved version section
         improved_label = ttk.Label(
@@ -127,7 +235,7 @@ class SchoolWorkHelper:
             text="Improved version:",
             font=("Arial", 11, "bold")
         )
-        improved_label.grid(row=6, column=0, sticky=tk.W, pady=(10, 5))
+        improved_label.grid(row=7, column=0, sticky=tk.W, pady=(10, 5))
 
         self.improved_text = scrolledtext.ScrolledText(
             main_frame,
@@ -136,7 +244,7 @@ class SchoolWorkHelper:
             font=("Arial", 10),
             bg="#e8f5e9"
         )
-        self.improved_text.grid(row=7, column=0, sticky=(tk.W, tk.E), pady=(0, 10))
+        self.improved_text.grid(row=8, column=0, sticky=(tk.W, tk.E), pady=(0, 10))
 
         # Copy button
         self.copy_button = ttk.Button(
@@ -145,7 +253,7 @@ class SchoolWorkHelper:
             command=self.copy_improved_text,
             state=tk.DISABLED
         )
-        self.copy_button.grid(row=8, column=0, pady=(0, 5))
+        self.copy_button.grid(row=9, column=0, pady=(0, 5))
 
         # AI status
         ai_status_text = "✓ AI Enhancement Active" if self.use_ai else "⚠️ AI Not Configured (Using basic mode)"
@@ -156,11 +264,17 @@ class SchoolWorkHelper:
             font=("Arial", 9),
             foreground=ai_status_color
         )
-        ai_status.grid(row=9, column=0, pady=(5, 0))
+        ai_status.grid(row=10, column=0, pady=(5, 0))
 
         # Configure row weights for resizing
-        for i in range(5, 8):
+        for i in range(6, 9):
             main_frame.rowconfigure(i, weight=1)
+
+    def on_subject_change(self, event=None):
+        """Handle subject selection change"""
+        subject = self.subject_var.get()
+        time_limit = self.subject_prompts[subject]["time_limit"]
+        self.time_label.config(text=f"({time_limit} sec max)")
 
     def toggle_recording(self):
         """Start or stop recording"""
@@ -187,12 +301,16 @@ class SchoolWorkHelper:
     def record_audio(self):
         """Record audio and convert to text"""
         try:
+            # Get time limit based on selected subject
+            subject = self.subject_var.get()
+            time_limit = self.subject_prompts[subject]["time_limit"]
+
             with sr.Microphone() as source:
                 # Adjust for ambient noise
                 self.recognizer.adjust_for_ambient_noise(source, duration=0.5)
 
-                # Record audio
-                audio = self.recognizer.listen(source, timeout=30, phrase_time_limit=30)
+                # Record audio with subject-specific time limit
+                audio = self.recognizer.listen(source, timeout=time_limit, phrase_time_limit=time_limit)
 
                 # Convert to text
                 self.root.after(0, lambda: self.status_label.config(
@@ -235,20 +353,16 @@ class SchoolWorkHelper:
     def improve_with_ai(self, text):
         """Use AI to improve the text"""
         try:
+            # Get subject-specific settings
+            subject = self.subject_var.get()
+            subject_config = self.subject_prompts[subject]
+
             response = self.client.chat.completions.create(
                 model="gpt-3.5-turbo",
                 messages=[
                     {
                         "role": "system",
-                        "content": """You are a helpful writing assistant for students. Your job is to take what a student says out loud and rewrite it in a clear, well-structured way that's appropriate for school assignments.
-
-Important rules:
-- Keep the student's original meaning and ideas
-- Make the language more formal and clear
-- Fix grammar and sentence structure
-- Don't add new information or answer questions for them
-- Keep it at an appropriate level for a student
-- Make it concise and easy to understand"""
+                        "content": subject_config["prompt"]
                     },
                     {
                         "role": "user",
@@ -256,7 +370,7 @@ Important rules:
                     }
                 ],
                 temperature=0.7,
-                max_tokens=500
+                max_tokens=subject_config["max_tokens"]
             )
 
             improved_text = response.choices[0].message.content.strip()

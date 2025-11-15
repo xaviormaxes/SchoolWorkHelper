@@ -6,7 +6,10 @@ A voice-to-text overlay application designed to help students who have difficult
 
 - **Always-On-Top Overlay**: Window stays on top of Chrome and other applications
 - **Voice Recognition**: Converts speech to text using Google's speech recognition
+- **Subject-Specific Modes**: Optimized for Essays, Math, History, Science, and General work
+- **Extended Recording Times**: Up to 3 minutes for essays, customized by subject
 - **AI-Powered Rewriting**: Uses OpenAI to improve grammar and clarity while preserving meaning
+- **Multi-Paragraph Support**: Perfect for long-form essays and detailed answers
 - **Easy Copy-Paste**: One-click copy to clipboard for quick pasting into schoolwork
 - **Privacy-Focused**: Works locally on your PC, no data stored
 - **No Cheating**: Helps articulate the student's own thoughts, doesn't answer questions
@@ -79,25 +82,35 @@ The app works in basic mode without AI, but for best results:
 
 1. **Position the window**: The app window will stay on top of other windows. Position it where it won't block important parts of the schoolwork screen.
 
-2. **Click "Start Recording"**: The status will show "Recording... Speak now!"
+2. **Select the subject**: Choose from Essay, Math, History, Science, or General
+   - **General**: 60 seconds - Short answers and quick responses
+   - **Math**: 90 seconds - Math problems and explanations
+   - **Science**: 2 minutes - Scientific explanations and lab reports
+   - **History**: 2.5 minutes - Historical analysis and narratives
+   - **Essay**: 3 minutes - Long-form writing and multi-paragraph responses
 
-3. **Speak the answer**: Have your son speak his thoughts naturally, as if explaining to a friend.
+3. **Click "Start Recording"**: The status will show "Recording... Speak now!"
 
-4. **Click "Stop Recording"** (or it stops automatically after 30 seconds)
+4. **Speak the answer**: Have your son speak his thoughts naturally, as if explaining to a friend.
 
-5. **Review the results**:
+5. **Click "Stop Recording"** when finished (or it stops automatically at the time limit)
+
+6. **Review the results**:
    - "What you said" shows the original transcription
-   - "Improved version" shows the rewritten, clearer text
+   - "Improved version" shows the rewritten, clearer text with subject-specific formatting
 
-6. **Copy and paste**: Click "Copy Improved Text" and paste it into the schoolwork (Ctrl+V)
+7. **Copy and paste**: Click "Copy Improved Text" and paste it into the schoolwork (Ctrl+V)
 
 ### Tips for Best Results
 
+- **Choose the right subject mode**: This optimizes the AI for the type of work
 - **Speak clearly** but naturally
 - **Use complete thoughts**: Try to speak in full sentences
-- **Keep it under 30 seconds** per recording for best results
+- **For essays**: Speak in logical chunks (introduction, body paragraphs, conclusion)
+- **For math**: Explain each step of your reasoning
+- **For history/science**: Organize your thoughts chronologically or by topic
 - **Review before submitting**: The student should always read and understand what they're submitting
-- **Multiple recordings**: For longer answers, break them into chunks
+- **Take advantage of extended time**: Essays can be up to 3 minutes - no need to rush!
 
 ## Troubleshooting
 
