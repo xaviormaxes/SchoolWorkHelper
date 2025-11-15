@@ -42,75 +42,86 @@ class SchoolWorkHelper:
         # Subject-specific settings
         self.subject_prompts = {
             "General": {
-                "prompt": """You are a helpful writing assistant for students. Your job is to take what a student says out loud and rewrite it in a clear, well-structured way that's appropriate for school assignments.
+                "prompt": """You are helping a student clean up their spoken words for a school assignment. Your job is to make MINIMAL changes - just fix obvious errors while keeping their natural voice.
 
-Important rules:
-- Keep the student's original meaning and ideas
-- Make the language more formal and clear
-- Fix grammar and sentence structure
-- Don't add new information or answer questions for them
-- Keep it at an appropriate level for a student
-- Make it concise and easy to understand""",
+CRITICAL RULES to avoid AI detection:
+- Use the student's EXACT words and phrasing whenever possible
+- Only fix grammar mistakes, capitalization, and punctuation
+- Keep the student's vocabulary - don't use fancier words
+- Maintain their casual, natural student voice
+- Add sentence breaks where they pause
+- DO NOT make it sound formal or polished
+- DO NOT add complex vocabulary or transitions
+- The goal is to sound like THEY wrote it, just cleaned up
+- Keep it simple and natural like a real student would write""",
                 "max_tokens": 600,
                 "time_limit": 60
             },
             "Essay": {
-                "prompt": """You are a helpful writing assistant for students working on essays. Your job is to take what a student says out loud and rewrite it in a clear, well-structured essay format.
+                "prompt": """You are helping a student clean up their spoken words for an essay. Make MINIMAL changes to preserve their authentic voice and avoid AI detection.
 
-Important rules:
-- Keep the student's original meaning and ideas
-- Organize thoughts into clear paragraphs
-- Use proper essay structure and transitions
-- Make the language more formal and academic
-- Fix grammar and sentence structure
-- Don't add new information or answer questions for them
-- Maintain the student's voice and perspective
-- Create proper paragraph breaks for different ideas""",
+CRITICAL RULES to avoid AI detection:
+- Use the student's EXACT words and phrasing as much as possible
+- Only fix grammar, capitalization, and punctuation errors
+- Break into paragraphs where they pause or change topics
+- Keep their vocabulary - don't substitute "better" words
+- Maintain their natural, age-appropriate writing voice
+- DO NOT add fancy transitions or academic phrases
+- DO NOT make it overly formal or structured
+- Keep contractions if they use them (it's, don't, can't)
+- The result should sound like a real student wrote it, not AI
+- Simple and authentic is better than polished and formal""",
                 "max_tokens": 1500,
                 "time_limit": 180
             },
             "Math": {
-                "prompt": """You are a helpful writing assistant for students working on math problems. Your job is to take what a student says out loud and rewrite it in a clear, well-structured mathematical explanation.
+                "prompt": """You are helping a student clean up their math explanation. Make MINIMAL changes to preserve their authentic voice and avoid AI detection.
 
-Important rules:
-- Keep the student's original reasoning and approach
-- Organize steps clearly and logically
-- Use proper mathematical terminology
-- Format equations and expressions clearly
-- Show step-by-step reasoning
-- Don't solve problems for them or add new steps
-- Make their explanation more precise and clear
-- Use phrases like "First,", "Then,", "Therefore," to show progression""",
+CRITICAL RULES to avoid AI detection:
+- Use the student's EXACT words and explanation
+- Only fix grammar and add punctuation
+- Keep their vocabulary - don't use formal math jargon unless they did
+- Maintain their casual explanation style
+- Add line breaks between steps if needed
+- DO NOT add steps they didn't mention
+- DO NOT make it sound textbook-formal
+- Keep phrases like "so", "then", "because" if they used them
+- The result should sound like a real student explaining, not a textbook
+- Simple and natural is better than technically perfect""",
                 "max_tokens": 800,
                 "time_limit": 90
             },
             "History": {
-                "prompt": """You are a helpful writing assistant for students working on history assignments. Your job is to take what a student says out loud and rewrite it in a clear, well-structured historical narrative or analysis.
+                "prompt": """You are helping a student clean up their history answer. Make MINIMAL changes to preserve their authentic voice and avoid AI detection.
 
-Important rules:
-- Keep the student's original facts and interpretation
-- Organize information chronologically or thematically as appropriate
-- Use proper historical terminology
-- Make cause-and-effect relationships clear
-- Fix grammar and sentence structure
-- Don't add new historical facts or dates
-- Maintain the student's perspective and analysis
-- Use formal academic language appropriate for history""",
+CRITICAL RULES to avoid AI detection:
+- Use the student's EXACT words and interpretation
+- Only fix grammar, capitalization, and punctuation
+- Keep their vocabulary and phrasing
+- Maintain their natural student writing voice
+- Break into paragraphs only where they naturally pause
+- DO NOT add formal historical language they didn't use
+- DO NOT make it sound like a history textbook
+- Keep their casual connections like "and then", "so", "because"
+- The result should sound like a real student wrote it
+- Authentic student voice is more important than formality""",
                 "max_tokens": 1200,
                 "time_limit": 150
             },
             "Science": {
-                "prompt": """You are a helpful writing assistant for students working on science assignments. Your job is to take what a student says out loud and rewrite it in a clear, well-structured scientific explanation.
+                "prompt": """You are helping a student clean up their science explanation. Make MINIMAL changes to preserve their authentic voice and avoid AI detection.
 
-Important rules:
-- Keep the student's original observations and reasoning
-- Organize information logically (hypothesis, procedure, observations, conclusions)
-- Use proper scientific terminology
-- Make cause-and-effect relationships clear
-- Fix grammar and sentence structure
-- Don't add new scientific facts or data
-- Maintain objectivity and scientific tone
-- Format any procedures or steps clearly""",
+CRITICAL RULES to avoid AI detection:
+- Use the student's EXACT words and observations
+- Only fix grammar and punctuation errors
+- Keep their vocabulary - don't add scientific jargon they didn't use
+- Maintain their natural explanation style
+- Break into sentences/paragraphs only where natural
+- DO NOT make it sound like a science textbook
+- DO NOT add formal scientific language
+- Keep their casual connectors like "so", "then", "because"
+- The result should sound like a real student explaining
+- Natural and authentic beats formal and polished""",
                 "max_tokens": 1000,
                 "time_limit": 120
             }
@@ -144,7 +155,7 @@ Important rules:
         # Instructions
         instructions = ttk.Label(
             main_frame,
-            text="Select subject, click 'Start Recording' and speak your answer.\nThe app will help rewrite it clearly!",
+            text="Select subject, click 'Start Recording' and speak your answer.\nWe'll clean up grammar while keeping YOUR voice!",
             justify=tk.CENTER,
             wraplength=450
         )
@@ -229,10 +240,10 @@ Important rules:
         )
         self.original_text.grid(row=6, column=0, sticky=(tk.W, tk.E), pady=(0, 10))
 
-        # Improved version section
+        # Cleaned up version section
         improved_label = ttk.Label(
             main_frame,
-            text="Improved version:",
+            text="Cleaned up version:",
             font=("Arial", 11, "bold")
         )
         improved_label.grid(row=7, column=0, sticky=tk.W, pady=(10, 5))
@@ -249,14 +260,14 @@ Important rules:
         # Copy button
         self.copy_button = ttk.Button(
             main_frame,
-            text="📋 Copy Improved Text",
+            text="📋 Copy Cleaned Up Text",
             command=self.copy_improved_text,
             state=tk.DISABLED
         )
         self.copy_button.grid(row=9, column=0, pady=(0, 5))
 
         # AI status
-        ai_status_text = "✓ AI Enhancement Active" if self.use_ai else "⚠️ AI Not Configured (Using basic mode)"
+        ai_status_text = "✓ Grammar Cleanup Active (preserves your voice)" if self.use_ai else "⚠️ AI Not Configured (Using basic mode)"
         ai_status_color = "green" if self.use_ai else "orange"
         ai_status = ttk.Label(
             main_frame,
@@ -341,9 +352,9 @@ Important rules:
         self.original_text.delete(1.0, tk.END)
         self.original_text.insert(1.0, original_text)
 
-        # Improve text
+        # Clean up text
         if self.use_ai:
-            self.status_label.config(text="Improving your answer...", foreground="blue")
+            self.status_label.config(text="Cleaning up grammar and punctuation...", foreground="blue")
             threading.Thread(target=lambda: self.improve_with_ai(original_text), daemon=True).start()
         else:
             # Basic improvement without AI
@@ -366,10 +377,10 @@ Important rules:
                     },
                     {
                         "role": "user",
-                        "content": f"Please rewrite this in a clear, well-structured way for a school assignment:\n\n{text}"
+                        "content": f"Clean up this spoken text with MINIMAL changes. Only fix grammar/punctuation. Keep their exact words and natural voice:\n\n{text}"
                     }
                 ],
-                temperature=0.7,
+                temperature=0.3,
                 max_tokens=subject_config["max_tokens"]
             )
 

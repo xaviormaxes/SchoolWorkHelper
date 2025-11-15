@@ -1,6 +1,6 @@
 # SchoolWorkHelper
 
-A voice-to-text overlay application designed to help students who have difficulty articulating their thoughts in writing. This app listens to what your child says and rewrites it clearly while keeping their original meaning - perfect for online schoolwork!
+A voice-to-text overlay application designed to help students who have difficulty articulating their thoughts in writing. This app listens to what your child says and cleans up grammar/punctuation while preserving THEIR authentic voice - perfect for online schoolwork!
 
 ## Features
 
@@ -8,11 +8,12 @@ A voice-to-text overlay application designed to help students who have difficult
 - **Voice Recognition**: Converts speech to text using Google's speech recognition
 - **Subject-Specific Modes**: Optimized for Essays, Math, History, Science, and General work
 - **Extended Recording Times**: Up to 3 minutes for essays, customized by subject
-- **AI-Powered Rewriting**: Uses OpenAI to improve grammar and clarity while preserving meaning
+- **Minimal AI Cleanup**: Only fixes grammar/punctuation - keeps the student's EXACT words and natural voice
+- **Avoids AI Detection**: Designed to preserve authentic student writing style
 - **Multi-Paragraph Support**: Perfect for long-form essays and detailed answers
 - **Easy Copy-Paste**: One-click copy to clipboard for quick pasting into schoolwork
 - **Privacy-Focused**: Works locally on your PC, no data stored
-- **No Cheating**: Helps articulate the student's own thoughts, doesn't answer questions
+- **No Cheating**: Helps express the student's own thoughts clearly, doesn't rewrite or change meaning
 
 ## System Requirements
 
@@ -97,20 +98,34 @@ The app works in basic mode without AI, but for best results:
 
 6. **Review the results**:
    - "What you said" shows the original transcription
-   - "Improved version" shows the rewritten, clearer text with subject-specific formatting
+   - "Cleaned up version" shows the text with grammar/punctuation fixed but YOUR words preserved
 
-7. **Copy and paste**: Click "Copy Improved Text" and paste it into the schoolwork (Ctrl+V)
+7. **Copy and paste**: Click "Copy Cleaned Up Text" and paste it into the schoolwork (Ctrl+V)
 
 ### Tips for Best Results
 
-- **Choose the right subject mode**: This optimizes the AI for the type of work
-- **Speak clearly** but naturally
+- **Choose the right subject mode**: This optimizes the cleanup for the type of work
+- **Speak clearly** but naturally - use your own words!
 - **Use complete thoughts**: Try to speak in full sentences
 - **For essays**: Speak in logical chunks (introduction, body paragraphs, conclusion)
-- **For math**: Explain each step of your reasoning
+- **For math**: Explain each step of your reasoning in your own way
 - **For history/science**: Organize your thoughts chronologically or by topic
 - **Review before submitting**: The student should always read and understand what they're submitting
 - **Take advantage of extended time**: Essays can be up to 3 minutes - no need to rush!
+
+### About AI Detection
+
+**This app is designed to AVOID AI detection flags:**
+
+- ✓ **Preserves the student's authentic voice** - We keep their exact words and phrasing
+- ✓ **Minimal changes only** - Just fixes grammar, capitalization, and punctuation
+- ✓ **No AI rewriting** - We don't substitute fancy words or formal language
+- ✓ **Keeps natural student style** - Maintains casual connectors like "so", "then", "because"
+- ✓ **No textbook language** - The output sounds like a real student wrote it
+
+**How it works:** The app acts like a helpful friend checking over the work - fixing typos and grammar mistakes while keeping the student's own voice and ideas completely intact. This is NOT the same as AI writing the content, which is why it shouldn't trigger AI detection tools.
+
+**Important:** The student must speak their OWN thoughts and ideas. The app just helps them express those thoughts more clearly on paper.
 
 ## Troubleshooting
 

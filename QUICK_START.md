@@ -38,20 +38,24 @@ Double-click `run.bat`
    - Essay (3 min) - Long-form essays
 
 2. Click "Start Recording"
-3. Speak your answer (time limit shown next to subject)
+3. Speak your answer in YOUR OWN WORDS (time limit shown next to subject)
 4. Click "Stop Recording" or wait for it to finish
-5. Review the improved text with subject-specific formatting
-6. Click "Copy Improved Text"
+5. Review the cleaned up text (grammar fixed, YOUR words kept!)
+6. Click "Copy Cleaned Up Text"
 7. Paste into your schoolwork (Ctrl+V or Cmd+V)
 
 ## Tips
 
 - **Choose the right subject** for best results
-- Speak naturally and clearly
+- **Speak naturally** using YOUR words - the app keeps them!
 - Use complete sentences when possible
 - For essays, you have up to 3 minutes!
 - Position the window so it doesn't block your work
 - The window stays on top - you can move it anywhere
+
+## No AI Detection Worries!
+
+This app only fixes grammar/punctuation while keeping YOUR exact words and natural voice. It won't make your writing sound AI-generated because it preserves your authentic student style!
 
 ## Troubleshooting
 
