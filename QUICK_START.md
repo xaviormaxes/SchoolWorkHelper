@@ -30,6 +30,7 @@ Double-click `run.bat`
 
 ## Using the App
 
+### Basic Recording
 1. **Select your subject** from the dropdown:
    - General (60 sec) - Quick answers
    - Math (90 sec) - Math problems
@@ -37,19 +38,36 @@ Double-click `run.bat`
    - History (2.5 min) - Historical writing
    - Essay (3 min) - Long-form essays
 
-2. Click "Start Recording"
+2. Click "Start Recording" (or press **Spacebar**)
 3. Speak your answer in YOUR OWN WORDS (time limit shown next to subject)
 4. Click "Stop Recording" or wait for it to finish
 5. Review the cleaned up text (grammar fixed, YOUR words kept!)
-6. Click "Copy Cleaned Up Text"
-7. Paste into your schoolwork (Ctrl+V or Cmd+V)
+6. Watch the word count and get encouraging messages!
+7. Click "Copy Cleaned Up Text"
+8. Paste into your schoolwork (Ctrl+V or Cmd+V)
+
+### NEW! For Long Essays
+1. Record introduction
+2. Click **"Add More"** button
+3. Record body paragraph 1
+4. Click **"Add More"** button
+5. Keep adding sections!
+6. Everything combines automatically
+7. **Save Draft** (Ctrl+S) to continue later
+
+### Keyboard Shortcuts (Faster!)
+- **Space** = Start/Stop recording
+- **Ctrl+S** = Save draft
+- **Ctrl+O** = Load draft
+- **Ctrl+Z** = Undo
 
 ## Tips
 
+- **Use keyboard shortcuts** - Press Space to start recording (hands-free!)
 - **Choose the right subject** for best results
 - **Speak naturally** using YOUR words - the app keeps them!
-- Use complete sentences when possible
-- For essays, you have up to 3 minutes!
+- **For long assignments**: Use "Add More" to record in chunks
+- **Save often**: Press Ctrl+S to save your work
 - Position the window so it doesn't block your work
 - The window stays on top - you can move it anywhere
 

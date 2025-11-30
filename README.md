@@ -4,13 +4,28 @@ A voice-to-text overlay application designed to help students who have difficult
 
 ## Features
 
+### Core Functionality
 - **Always-On-Top Overlay**: Window stays on top of Chrome and other applications
 - **Voice Recognition**: Converts speech to text using Google's speech recognition
 - **Subject-Specific Modes**: Optimized for Essays, Math, History, Science, and General work
 - **Extended Recording Times**: Up to 3 minutes for essays, customized by subject
 - **Minimal AI Cleanup**: Only fixes grammar/punctuation - keeps the student's EXACT words and natural voice
 - **Avoids AI Detection**: Designed to preserve authentic student writing style
-- **Multi-Paragraph Support**: Perfect for long-form essays and detailed answers
+
+### NEW - Productivity Features
+- **Word Count Display**: Live word count with progress tracking
+- **Encouraging Messages**: Positive reinforcement as your son works ("Great start!", "Nice progress!")
+- **Multiple Recordings**: Record in segments and combine them - perfect for long essays
+- **Add More Button**: Keep adding to your work without losing previous parts
+- **Undo Function**: Oops? Go back to the previous version
+- **Save & Load Drafts**: Save work in progress and come back to it later
+- **Keyboard Shortcuts**:
+  - **Space** = Start/Stop recording (hands-free!)
+  - **Ctrl+S** = Save draft
+  - **Ctrl+O** = Load draft
+  - **Ctrl+Z** = Undo last action
+
+### Student-Friendly
 - **Easy Copy-Paste**: One-click copy to clipboard for quick pasting into schoolwork
 - **Privacy-Focused**: Works locally on your PC, no data stored
 - **No Cheating**: Helps express the student's own thoughts clearly, doesn't rewrite or change meaning
@@ -101,6 +116,41 @@ The app works in basic mode without AI, but for best results:
    - "Cleaned up version" shows the text with grammar/punctuation fixed but YOUR words preserved
 
 7. **Copy and paste**: Click "Copy Cleaned Up Text" and paste it into the schoolwork (Ctrl+V)
+
+### NEW Features - How to Use
+
+#### Word Count & Encouragement
+- Watch the word count update in real-time as you work
+- Get encouraging messages:
+  - 50+ words: "Great start! Keep going! 💪"
+  - 100+ words: "Nice progress! You're doing awesome! ⭐"
+  - 200+ words: "Wow! That's a lot of great work! 🎉"
+
+#### Multiple Recordings (Perfect for Essays!)
+1. Record your first part (introduction)
+2. Review the cleaned up text
+3. Click **"Add More"** button
+4. Record the next part (body paragraph)
+5. Repeat for as many sections as needed
+6. All sections combine automatically with proper spacing
+7. Copy the complete essay when done!
+
+#### Save & Load Drafts
+- **Save**: Click "Save" button or press **Ctrl+S** to save your work
+- **Load**: Click "Load" button or press **Ctrl+O** to continue where you left off
+- Great for assignments that take multiple sessions!
+
+#### Undo
+- Made a mistake? Click "Undo" or press **Ctrl+Z**
+- Goes back to the previous version
+- Can undo multiple times
+
+#### Keyboard Shortcuts (Hands-Free!)
+- **Spacebar**: Start/Stop recording (no mouse needed!)
+- **Ctrl+S**: Quick save
+- **Ctrl+O**: Quick load
+- **Ctrl+Z**: Undo
+- Just press Space to toggle recording while your son thinks!
 
 ### Tips for Best Results
 

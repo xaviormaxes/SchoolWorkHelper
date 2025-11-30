@@ -5,11 +5,13 @@ Helps students articulate their thoughts by converting speech to improved writte
 """
 
 import tkinter as tk
-from tkinter import ttk, scrolledtext, messagebox
+from tkinter import ttk, scrolledtext, messagebox, filedialog
 import speech_recognition as sr
 import pyperclip
 import threading
 import os
+import json
+from datetime import datetime
 from dotenv import load_dotenv
 from openai import OpenAI
 
@@ -21,7 +23,7 @@ class SchoolWorkHelper:
     def __init__(self, root):
         self.root = root
         self.root.title("School Work Helper")
-        self.root.geometry("500x700")
+        self.root.geometry("550x750")
 
         # Make window always on top
         self.root.attributes('-topmost', True)
@@ -38,6 +40,11 @@ class SchoolWorkHelper:
         self.use_ai = bool(api_key)
         if self.use_ai:
             self.client = OpenAI(api_key=api_key)
+
+        # History and segments tracking
+        self.history_stack = []  # For undo functionality
+        self.segments = []  # For combining multiple recordings
+        self.word_count = 0
 
         # Subject-specific settings
         self.subject_prompts = {
@@ -129,6 +136,12 @@ CRITICAL RULES to avoid AI detection:
 
         # Setup UI
         self.setup_ui()
+
+        # Setup keyboard shortcuts
+        self.root.bind('<space>', self.keyboard_toggle_recording)
+        self.root.bind('<Control-s>', self.keyboard_save_draft)
+        self.root.bind('<Control-o>', self.keyboard_open_draft)
+        self.root.bind('<Control-z>', self.keyboard_undo)
 
         # Add minimize to tray hint
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
@@ -223,39 +236,101 @@ CRITICAL RULES to avoid AI detection:
         )
         self.clear_button.grid(row=0, column=1, padx=5)
 
+        # Additional controls frame
+        controls_frame2 = ttk.Frame(main_frame)
+        controls_frame2.grid(row=5, column=0, pady=(0, 5))
+
+        # Add More button (for multiple recordings)
+        self.add_more_button = ttk.Button(
+            controls_frame2,
+            text="➕ Add More",
+            command=self.add_more_recording,
+            width=12,
+            state=tk.DISABLED
+        )
+        self.add_more_button.grid(row=0, column=0, padx=3)
+
+        # Undo button
+        self.undo_button = ttk.Button(
+            controls_frame2,
+            text="↶ Undo",
+            command=self.undo_last,
+            width=10,
+            state=tk.DISABLED
+        )
+        self.undo_button.grid(row=0, column=1, padx=3)
+
+        # Save Draft button
+        self.save_button = ttk.Button(
+            controls_frame2,
+            text="💾 Save",
+            command=self.save_draft,
+            width=10
+        )
+        self.save_button.grid(row=0, column=2, padx=3)
+
+        # Load Draft button
+        self.load_button = ttk.Button(
+            controls_frame2,
+            text="📂 Load",
+            command=self.load_draft,
+            width=10
+        )
+        self.load_button.grid(row=0, column=3, padx=3)
+
         # What you said section
         original_label = ttk.Label(
             main_frame,
             text="What you said:",
             font=("Arial", 11, "bold")
         )
-        original_label.grid(row=5, column=0, sticky=tk.W, pady=(10, 5))
+        original_label.grid(row=6, column=0, sticky=tk.W, pady=(10, 5))
 
         self.original_text = scrolledtext.ScrolledText(
             main_frame,
-            height=6,
+            height=5,
             wrap=tk.WORD,
             font=("Arial", 10),
             bg="#f0f0f0"
         )
-        self.original_text.grid(row=6, column=0, sticky=(tk.W, tk.E), pady=(0, 10))
+        self.original_text.grid(row=7, column=0, sticky=(tk.W, tk.E), pady=(0, 10))
 
-        # Cleaned up version section
+        # Cleaned up version section with word count
+        cleaned_label_frame = ttk.Frame(main_frame)
+        cleaned_label_frame.grid(row=8, column=0, sticky=(tk.W, tk.E), pady=(10, 5))
+
         improved_label = ttk.Label(
-            main_frame,
+            cleaned_label_frame,
             text="Cleaned up version:",
             font=("Arial", 11, "bold")
         )
-        improved_label.grid(row=7, column=0, sticky=tk.W, pady=(10, 5))
+        improved_label.pack(side=tk.LEFT)
+
+        self.word_count_label = ttk.Label(
+            cleaned_label_frame,
+            text="(0 words)",
+            font=("Arial", 9),
+            foreground="gray"
+        )
+        self.word_count_label.pack(side=tk.LEFT, padx=(10, 0))
 
         self.improved_text = scrolledtext.ScrolledText(
             main_frame,
-            height=8,
+            height=7,
             wrap=tk.WORD,
             font=("Arial", 10),
             bg="#e8f5e9"
         )
-        self.improved_text.grid(row=8, column=0, sticky=(tk.W, tk.E), pady=(0, 10))
+        self.improved_text.grid(row=9, column=0, sticky=(tk.W, tk.E), pady=(0, 10))
+
+        # Encouragement label
+        self.encouragement_label = ttk.Label(
+            main_frame,
+            text="",
+            font=("Arial", 10, "italic"),
+            foreground="#2e7d32"
+        )
+        self.encouragement_label.grid(row=10, column=0, pady=(0, 5))
 
         # Copy button
         self.copy_button = ttk.Button(
@@ -264,7 +339,7 @@ CRITICAL RULES to avoid AI detection:
             command=self.copy_improved_text,
             state=tk.DISABLED
         )
-        self.copy_button.grid(row=9, column=0, pady=(0, 5))
+        self.copy_button.grid(row=11, column=0, pady=(0, 5))
 
         # AI status
         ai_status_text = "✓ Grammar Cleanup Active (preserves your voice)" if self.use_ai else "⚠️ AI Not Configured (Using basic mode)"
@@ -275,10 +350,19 @@ CRITICAL RULES to avoid AI detection:
             font=("Arial", 9),
             foreground=ai_status_color
         )
-        ai_status.grid(row=10, column=0, pady=(5, 0))
+        ai_status.grid(row=12, column=0, pady=(5, 0))
+
+        # Keyboard shortcuts hint
+        shortcuts_hint = ttk.Label(
+            main_frame,
+            text="⌨️ Shortcuts: Space=Record | Ctrl+S=Save | Ctrl+O=Load | Ctrl+Z=Undo",
+            font=("Arial", 8),
+            foreground="gray"
+        )
+        shortcuts_hint.grid(row=13, column=0, pady=(3, 0))
 
         # Configure row weights for resizing
-        for i in range(6, 9):
+        for i in range(7, 10):
             main_frame.rowconfigure(i, weight=1)
 
     def on_subject_change(self, event=None):
@@ -407,10 +491,18 @@ CRITICAL RULES to avoid AI detection:
 
     def display_improved_text(self, improved_text):
         """Display the improved text"""
-        self.improved_text.delete(1.0, tk.END)
-        self.improved_text.insert(1.0, improved_text)
+        # If we have segments, combine with new text
+        if self.segments:
+            combined = "\n\n".join(self.segments) + "\n\n" + improved_text
+            self.improved_text.delete(1.0, tk.END)
+            self.improved_text.insert(1.0, combined)
+        else:
+            self.improved_text.delete(1.0, tk.END)
+            self.improved_text.insert(1.0, improved_text)
 
         self.copy_button.config(state=tk.NORMAL)
+        self.add_more_button.config(state=tk.NORMAL)
+        self.update_word_count()
         self.status_label.config(text="✓ Ready! Copy and paste into your work.", foreground="green")
 
     def copy_improved_text(self):
@@ -429,13 +521,165 @@ CRITICAL RULES to avoid AI detection:
         """Clear all text fields"""
         self.original_text.delete(1.0, tk.END)
         self.improved_text.delete(1.0, tk.END)
+        self.segments = []
+        self.history_stack = []
         self.copy_button.config(state=tk.DISABLED)
+        self.add_more_button.config(state=tk.DISABLED)
+        self.undo_button.config(state=tk.DISABLED)
+        self.update_word_count()
         self.status_label.config(text="Ready to record", foreground="green")
 
     def show_error(self, message):
         """Show error message"""
         self.status_label.config(text="Error - Ready to try again", foreground="red")
         messagebox.showerror("Error", message)
+
+    def update_word_count(self):
+        """Update word count display"""
+        text = self.improved_text.get(1.0, tk.END).strip()
+        if text:
+            self.word_count = len(text.split())
+            self.word_count_label.config(text=f"({self.word_count} words)")
+
+            # Show encouraging messages based on word count
+            if self.word_count >= 50 and self.word_count < 100:
+                self.encouragement_label.config(text="Great start! Keep going! 💪")
+            elif self.word_count >= 100 and self.word_count < 200:
+                self.encouragement_label.config(text="Nice progress! You're doing awesome! ⭐")
+            elif self.word_count >= 200:
+                self.encouragement_label.config(text="Wow! That's a lot of great work! 🎉")
+        else:
+            self.word_count = 0
+            self.word_count_label.config(text="(0 words)")
+            self.encouragement_label.config(text="")
+
+    def add_more_recording(self):
+        """Add current text to segments and prepare for another recording"""
+        current_text = self.improved_text.get(1.0, tk.END).strip()
+        if current_text:
+            # Save to history for undo
+            self.history_stack.append({
+                'original': self.original_text.get(1.0, tk.END).strip(),
+                'improved': current_text
+            })
+
+            # Add to segments
+            self.segments.append(current_text)
+
+            # Clear for next recording
+            self.original_text.delete(1.0, tk.END)
+            self.status_label.config(text=f"Segment {len(self.segments)} saved! Record next part.", foreground="green")
+            self.add_more_button.config(state=tk.DISABLED)
+            self.copy_button.config(state=tk.DISABLED)
+            self.undo_button.config(state=tk.NORMAL)
+
+            # Show combined text in improved area
+            combined = "\n\n".join(self.segments)
+            self.improved_text.delete(1.0, tk.END)
+            self.improved_text.insert(1.0, combined + "\n\n[Continue speaking...]")
+            self.update_word_count()
+
+    def undo_last(self):
+        """Undo the last action"""
+        if self.history_stack:
+            last_state = self.history_stack.pop()
+
+            # Remove last segment if exists
+            if self.segments:
+                self.segments.pop()
+
+            # Restore previous state
+            self.original_text.delete(1.0, tk.END)
+            self.original_text.insert(1.0, last_state['original'])
+
+            self.improved_text.delete(1.0, tk.END)
+            if self.segments:
+                combined = "\n\n".join(self.segments)
+                self.improved_text.insert(1.0, combined)
+            else:
+                self.improved_text.insert(1.0, last_state['improved'])
+
+            self.update_word_count()
+            self.status_label.config(text="Undone!", foreground="green")
+
+            if not self.history_stack:
+                self.undo_button.config(state=tk.DISABLED)
+        else:
+            messagebox.showinfo("Undo", "Nothing to undo!")
+
+    def save_draft(self):
+        """Save current work to a file"""
+        text = self.improved_text.get(1.0, tk.END).strip()
+        if not text:
+            messagebox.showwarning("Save Draft", "Nothing to save!")
+            return
+
+        filename = filedialog.asksaveasfilename(
+            defaultextension=".txt",
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")],
+            initialfile=f"draft_{datetime.now().strftime('%Y%m%d_%H%M%S')}.txt"
+        )
+
+        if filename:
+            try:
+                with open(filename, 'w', encoding='utf-8') as f:
+                    f.write(text)
+                self.status_label.config(text=f"Saved to {os.path.basename(filename)}!", foreground="green")
+                messagebox.showinfo("Save Draft", "Draft saved successfully!")
+            except Exception as e:
+                messagebox.showerror("Save Error", f"Could not save file: {e}")
+
+    def load_draft(self):
+        """Load a draft from a file"""
+        filename = filedialog.askopenfilename(
+            filetypes=[("Text files", "*.txt"), ("All files", "*.*")]
+        )
+
+        if filename:
+            try:
+                with open(filename, 'r', encoding='utf-8') as f:
+                    text = f.read()
+
+                # Save current state to history if there's content
+                current_text = self.improved_text.get(1.0, tk.END).strip()
+                if current_text:
+                    self.history_stack.append({
+                        'original': self.original_text.get(1.0, tk.END).strip(),
+                        'improved': current_text
+                    })
+                    self.undo_button.config(state=tk.NORMAL)
+
+                # Load the draft
+                self.improved_text.delete(1.0, tk.END)
+                self.improved_text.insert(1.0, text)
+                self.update_word_count()
+                self.copy_button.config(state=tk.NORMAL)
+                self.status_label.config(text=f"Loaded {os.path.basename(filename)}!", foreground="green")
+            except Exception as e:
+                messagebox.showerror("Load Error", f"Could not load file: {e}")
+
+    def keyboard_toggle_recording(self, event):
+        """Handle spacebar press for recording"""
+        # Don't trigger if typing in text boxes
+        if isinstance(event.widget, (tk.Text, scrolledtext.ScrolledText, ttk.Entry, ttk.Combobox)):
+            return
+        self.toggle_recording()
+        return "break"  # Prevent space from being typed
+
+    def keyboard_save_draft(self, event):
+        """Handle Ctrl+S for save"""
+        self.save_draft()
+        return "break"
+
+    def keyboard_open_draft(self, event):
+        """Handle Ctrl+O for open"""
+        self.load_draft()
+        return "break"
+
+    def keyboard_undo(self, event):
+        """Handle Ctrl+Z for undo"""
+        self.undo_last()
+        return "break"
 
     def on_closing(self):
         """Handle window closing"""
